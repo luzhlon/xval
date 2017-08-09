@@ -11,9 +11,10 @@ namespace xval {
     }
 
     Value Value::get(const Value& v) {
-        if (islist())
-            return v.isint() ?
-                list().get(v.Int()): Value::Nil;
+        if (islist() && v.isint())
+            return list().get(v.Int());
+        else if (istuple() && v.isint())
+            return tuple().get(v.Int());
         else if (isdict())
             return dict().get(v);
         else
@@ -23,6 +24,8 @@ namespace xval {
     Value& Value::set(const Value& k, const Value& v) {
         if (islist() && v.isint())
             list().set(v.Int(), v);
+        if (istuple() && v.isint())
+            tuple().set(v.Int(), v);
         else if (isdict())
             dict().set(k, v);
         return *this;
